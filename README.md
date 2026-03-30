@@ -1,22 +1,15 @@
-Проект представляет собой систему распределения государственных субсидий для сельхозпроизводителей на основе merit-based подхода. Вместо принципа «первый подал — первый получил» используется модель машинного обучения, которая оценивает каждую заявку на основе данных о хозяйстве, его показателях и истории.
+The project is a merit-based system for distributing government subsidies to agricultural producers. Instead of a first-come, first-served approach, a machine leardning model is used to evaluate each application based on farm data, its performance, and history.
 
-Пользователь (сельхозпроизводитель или оператор) подаёт заявку через веб-интерфейс, указывая ключевые характеристики: регион, объем производства, финансовые показатели и другую релевантную информацию. Эти данные отправляются на backend, где интегрирована готовая ML-модель. Модель рассчитывает итоговый скоринг (score) и формирует объяснение — какие факторы повлияли на результат.
+The user (agricultural producer or operator) submits an application through a web interface, specifying key characteristics such as region, production volume, financial indicators, and other relevant information. This data is sent to the backend, where a ready-made ML model is integrated. The model calculates the final score and generates an explanation of the factors that influenced the outcome.
 
-Система сохраняет заявки, результаты скоринга и историю, после чего ранжирует всех заявителей. На основе этих данных формируется shortlist кандидатов, рекомендованных к получению субсидий. Финальное решение остаётся за комиссией, но система значительно упрощает и объективизирует процесс отбора.
+The system stores applications, scoring results, and history, and then ranks all applicants. Based on this data, a shortlist of candidates recommended for subsidies is created. The final decision rests with the commission, but the system significantly simplifies and objectively simplifies the selection process.
 
-Frontend реализован на Angular и обеспечивает:
+The frontend is implemented in Angular and provides:
 
-аутентификацию пользователей (JWT)
-формы подачи заявок
-просмотр списка заявителей
-отображение скоринга и его объяснения
-просмотр shortlist кандидатов
+user authentication (JWT) for the application form, viewing the list of applicants, displaying the score and its explanation, and viewing the shortlist of candidates.
 
-Backend на Django REST Framework:
+The backend is built on the Django REST Framework:
 
-обрабатывает API-запросы
-управляет данными (заявки, показатели, история субсидий)
-интегрирует ML-модель для расчета скоринга
-реализует авторизацию и CRUD-операции
+processes API requests, manages data (applications, indicators, subsidy history), integrates an ML model for scoring calculations, and implements authorization and CRUD operations.
 
-В результате система делает процесс распределения субсидий более прозрачным, справедливым и основанным на данных, снижая влияние очередности и человеческого фактора.
+As a result, the system makes the subsidy distribution process more transparent, fair, and data-driven, reducing the influence of queue management and human error.
