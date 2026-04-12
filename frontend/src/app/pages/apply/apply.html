@@ -1,0 +1,134 @@
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">АгроСубсидия</div>
+    <nav>
+      <a class="nav-link" (click)="goToDashboard()">Заявки</a>
+      <a class="nav-link active">Подать заявку</a>
+    </nav>
+    <div class="sidebar-footer">
+      <span class="username">{{ auth.getUsername() }}</span>
+      <button class="btn-logout" (click)="logout()">Выйти</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    @if (submitted && result) {
+      <div class="result-card">
+        <div class="result-icon">✓</div>
+        <h2>Заявка подана!</h2>
+        <p class="result-number">{{ result.application_number || result.id.slice(0,8) }}</p>
+        <div class="score-block" [class]="getScoreClass(result.result?.score)">
+          <div class="score-value">{{ result.result?.score }}</div>
+          <div class="score-label">{{ getScoreLabel(result.result?.score) }}</div>
+        </div>
+        <div class="result-info">
+          <div class="info-row"><span>Регион</span><strong>{{ result.region_code }}</strong></div>
+          <div class="info-row"><span>Субсидия</span><strong>{{ result.meta?.subsidy_name || result.crop_type }}</strong></div>
+          <div class="info-row"><span>Сумма</span><strong>{{ result.amount_requested | number }} тг</strong></div>
+          <div class="info-row"><span>Статус</span><strong>На рассмотрении</strong></div>
+        </div>
+        <button class="btn-primary" (click)="goToDashboard()">Перейти к заявкам</button>
+      </div>
+    } @else {
+      <div class="wizard-card">
+        <h2>Новая заявка</h2>
+
+        <div class="steps">
+          <div class="step" [class.active]="currentStep >= 1" [class.done]="currentStep > 1">
+            <div class="step-circle">@if (currentStep > 1) { ✓ } @else { 1 }</div>
+            <span>Местоположение</span>
+          </div>
+          <div class="step-line" [class.done]="currentStep > 1"></div>
+          <div class="step" [class.active]="currentStep >= 2" [class.done]="currentStep > 2">
+            <div class="step-circle">@if (currentStep > 2) { ✓ } @else { 2 }</div>
+            <span>Субсидия</span>
+          </div>
+          <div class="step-line" [class.done]="currentStep > 2"></div>
+          <div class="step" [class.active]="currentStep >= 3">
+            <div class="step-circle">3</div>
+            <span>Количество</span>
+          </div>
+        </div>
+
+        @if (error) { <div class="error-msg">{{ error }}</div> }
+
+        <!-- Step 1 -->
+        @if (currentStep === 1) {
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Дата поступления</label>
+              <input type="date" [(ngModel)]="dateReceived" class="input" />
+            </div>
+            <div class="form-group">
+              <label>Область</label>
+              <select [(ngModel)]="regionCode" (ngModelChange)="onRegionChange()" class="input">
+                <option value="">Выберите область</option>
+                @for (r of regions; track r) { <option [value]="r">{{ r }}</option> }
+              </select>
+            </div>
+            <div class="form-group full-width">
+              <label>Акимат</label>
+              <input type="text" [(ngModel)]="akimat" class="input readonly" readonly />
+            </div>
+            <div class="form-group full-width">
+              <label>Тип пастбища</label>
+              <select [(ngModel)]="pastureType" class="input">
+                <option value="">Выберите тип пастбища</option>
+                @for (p of pastureTypes; track p) { <option [value]="p">{{ p }}</option> }
+              </select>
+            </div>
+          </div>
+        }
+
+        <!-- Step 2 -->
+        @if (currentStep === 2) {
+          <div class="form-group">
+            <label>Выберите субсидию</label>
+            <select [(ngModel)]="subsidyId" (ngModelChange)="onSubsidyChange()" class="input">
+              <option value="">— Выберите субсидию —</option>
+              @for (s of subsidies; track s.id) {
+                <option [value]="s.id">{{ s.name }} ({{ s.normative | number }} тг/{{ s.unit }})</option>
+              }
+            </select>
+          </div>
+          @if (selectedSubsidy) {
+            <div class="subsidy-info">
+              <div class="info-row"><span>Направление</span><strong>{{ selectedSubsidy.direction }}</strong></div>
+              <div class="info-row"><span>Норматив</span><strong>{{ selectedSubsidy.normative | number }} тг / {{ selectedSubsidy.unit }}</strong></div>
+            </div>
+          }
+        }
+
+        <!-- Step 3 -->
+        @if (currentStep === 3) {
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Количество ({{ selectedSubsidy?.unit }})</label>
+              <input type="number" [(ngModel)]="quantity" [placeholder]="'Укажите количество в ' + (selectedSubsidy?.unit ?? '')" class="input" min="1" />
+            </div>
+            <div class="form-group">
+              <label>Сумма к выплате (тг)</label>
+              <input type="text" [value]="amountRequested | number" class="input readonly" readonly />
+            </div>
+          </div>
+          @if (selectedSubsidy && quantity) {
+            <div class="calc-note">
+              {{ selectedSubsidy.normative | number }} тг × {{ quantity }} {{ selectedSubsidy.unit }} = {{ amountRequested | number }} тг
+            </div>
+          }
+        }
+
+        <div class="nav-btns">
+          <button class="btn-secondary" (click)="prevStep()">
+            {{ currentStep === 1 ? '← Отмена' : '← Назад' }}
+          </button>
+          <button class="btn-primary" (click)="nextStep()" [disabled]="!isStepValid() || submitting">
+            @if (submitting) { Отправка... }
+            @else if (currentStep < 3) { Далее → }
+            @else { Подать заявку }
+          </button>
+        </div>
+      </div>
+    }
+  </main>
+</div>

@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  django:
+    build: ./backend
+    ports:
+      - "8001:8001"
+    environment:
+      DB_HOST: host.docker.internal
+      DB_PORT: 5433
+      DB_NAME: agro
+      DB_USER: agro
+      DB_PASSWORD: secret
+      ML_SERVICE_URL: http://host.docker.internal:8000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - django

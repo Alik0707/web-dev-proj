@@ -1,0 +1,79 @@
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">АгроСубсидия</div>
+    <nav>
+      <a class="nav-link active">Заявки</a>
+      <a class="nav-link" (click)="goToApply()">Подать заявку</a>
+    </nav>
+    <div class="sidebar-footer">
+      <span class="username">{{ auth.getUsername() }}</span>
+      <span class="role-badge">{{ auth.isAdmin() ? 'Админ' : 'Пользователь' }}</span>
+      <button class="btn-logout" (click)="logout()">Выйти</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="header">
+      <h2>Все заявки</h2>
+      <div class="header-right">
+        <input class="search-input" type="text" [(ngModel)]="searchQuery" placeholder="Поиск по региону..." (ngModelChange)="onSearch()" />
+        <button class="btn-primary" (click)="goToApply()">+ Подать заявку</button>
+      </div>
+    </div>
+
+    @if (error) { <div class="error-msg">{{ error }}</div> }
+
+    @if (loading) {
+      <div class="loading">Загрузка...</div>
+    } @else if (applications.length === 0) {
+      <div class="empty">Заявок пока нет</div>
+    } @else {
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Номер</th>
+              <th>Регион</th>
+              <th>Направление</th>
+              <th>Сумма (тг)</th>
+              <th>Скоринг</th>
+              <th>Статус</th>
+              @if (auth.isAdmin()) { <th>Действия</th> }
+            </tr>
+          </thead>
+          <tbody>
+            @for (app of applications; track app.id) {
+              <tr>
+                <td>{{ app.application_number || app.id.slice(0,8) }}</td>
+                <td>{{ app.region_code }}</td>
+                <td>{{ app.meta?.direction || app.crop_type }}</td>
+                <td>{{ app.amount_requested | number }}</td>
+                <td>
+                  @if (app.result) {
+                    <span class="score">{{ app.result.score }}</span>
+                  } @else { <span class="no-score">—</span> }
+                </td>
+                <td>
+                  <span [class]="getStatusClass(app.result?.admin_status)">
+                    {{ getStatusLabel(app.result?.admin_status) }}
+                  </span>
+                </td>
+                @if (auth.isAdmin()) {
+                  <td class="actions">
+                    @if (app.result?.admin_status !== 'approved') {
+                      <button class="btn-approve" (click)="approve(app.id)">Одобрить</button>
+                    }
+                    @if (app.result?.admin_status !== 'rejected') {
+                      <button class="btn-reject" (click)="reject(app.id)">Отклонить</button>
+                    }
+                    <button class="btn-delete" (click)="delete(app.id)">Удалить</button>
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </main>
+</div>

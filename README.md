@@ -1,15 +1,68 @@
-The project is a merit-based system for distributing government subsidies to agricultural producers. Instead of a first-come, first-served approach, a machine leardning model is used to evaluate each application based on farm data, its performance, and history.
+# Agro Subsidy — Django + Angular
 
-The user (agricultural producer or operator) submits an application through a web interface, specifying key characteristics such as region, production volume, financial indicators, and other relevant information. This data is sent to the backend, where a ready-made ML model is integrated. The model calculates the final score and generates an explanation of the factors that influenced the outcome.
+Система управления заявками на агросубсидии.
 
-The system stores applications, scoring results, and history, and then ranks all applicants. Based on this data, a shortlist of candidates recommended for subsidies is created. The final decision rests with the commission, but the system significantly simplifies and objectively simplifies the selection process.
+## Состав проекта
 
-The frontend is implemented in Angular and provides:
+```
+backend/    — Django + DRF (API, JWT аутентификация)
+frontend/   — Angular 21 (SPA)
+```
 
-user authentication (JWT) for the application form, viewing the list of applicants, displaying the score and its explanation, and viewing the shortlist of candidates.
+## Быстрый старт
 
-The backend is built on the Django REST Framework:
+### 1. Поднять PostgreSQL + ML сервис (старый проект)
+```bash
+cd ~/agro_subsidy-modified
+docker compose up -d
+```
 
-processes API requests, manages data (applications, indicators, subsidy history), integrates an ML model for scoring calculations, and implements authorization and CRUD operations.
+### 2. Запустить Django backend
+```bash
+cd backend
+pip install -r requirements.txt
+cp .env.example .env
+python manage.py runserver 8001
+```
 
-As a result, the system makes the subsidy distribution process more transparent, fair, and data-driven, reducing the influence of queue management and human error.
+### 3. Запустить Angular frontend
+```bash
+cd frontend
+npm install
+ng serve
+```
+
+Открыть **http://localhost:4200**
+
+## Порты
+
+| Сервис | Порт |
+|---|---|
+| Angular | 4200 |
+| Django API | 8001 |
+| PostgreSQL | 5433 |
+| ML сервис | 8000 |
+
+## Демо-аккаунты
+
+| Роль | Логин | Пароль |
+|---|---|---|
+| Администратор | `admin` | `admin` |
+| Пользователь | `user` | `user` |
+
+## API эндпоинты (Django)
+
+| Метод | Путь | Описание |
+|---|---|---|
+| POST | `/api/login/` | Вход, возвращает JWT |
+| POST | `/api/submit/` | Подать заявку |
+| GET | `/api/applications/` | Список заявок |
+| PATCH | `/api/applications/{id}/` | Одобрить / отклонить |
+| GET | `/api/budget/` | Бюджеты по регионам |
+| PATCH | `/api/budget/{id}/` | Обновить бюджет |
+
+## Участники группы
+
+- ...
+- ...
+- ...
