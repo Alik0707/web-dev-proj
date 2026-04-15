@@ -58,11 +58,14 @@ ng serve
 | POST | `/api/submit/` | Подать заявку |
 | GET | `/api/applications/` | Список заявок |
 | PATCH | `/api/applications/{id}/` | Одобрить / отклонить |
+| DELETE | `/api/applications/{id}/` | Удалить заявку |
+| GET | `/api/subsidies/` | Справочник субсидий |
 | GET | `/api/budget/` | Бюджеты по регионам |
 | PATCH | `/api/budget/{id}/` | Обновить бюджет |
 
 ## Участники группы
 
-- ...
-- ...
-- ...
+- Алихан
+- Бека
+- Асланбек
+- Иска

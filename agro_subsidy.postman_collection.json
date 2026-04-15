@@ -1,0 +1,107 @@
+{
+  "info": {
+    "name": "Agro Subsidy API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. LOGIN",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin\"\n}"
+        },
+        "url": "http://localhost:8001/api/login/"
+      }
+    },
+    {
+      "name": "2. GET все заявки",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer ВСТАВЬ_ТОКЕН_СЮДА" }
+        ],
+        "url": "http://localhost:8001/api/applications/"
+      }
+    },
+    {
+      "name": "3. GET заявки поиск по региону",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer ВСТАВЬ_ТОКЕН_СЮДА" }
+        ],
+        "url": "http://localhost:8001/api/applications/?search=Алматинская"
+      }
+    },
+    {
+      "name": "4. POST подать заявку",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer ВСТАВЬ_ТОКЕН_СЮДА" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"region_code\": \"Алматинская область\",\n  \"crop_type\": \"Животноводство\",\n  \"amount_requested\": 150000,\n  \"amount_norm\": 15000\n}"
+        },
+        "url": "http://localhost:8001/api/submit/"
+      }
+    },
+    {
+      "name": "5. PATCH одобрить заявку",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer ВСТАВЬ_ТОКЕН_СЮДА" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"action\": \"approve\"\n}"
+        },
+        "url": "http://localhost:8001/api/applications/ВСТАВЬ_ID_СЮДА/"
+      }
+    },
+    {
+      "name": "6. PATCH отклонить заявку",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer ВСТАВЬ_ТОКЕН_СЮДА" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"action\": \"reject\"\n}"
+        },
+        "url": "http://localhost:8001/api/applications/ВСТАВЬ_ID_СЮДА/"
+      }
+    },
+    {
+      "name": "7. DELETE удалить заявку",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Bearer ВСТАВЬ_ТОКЕН_СЮДА" }
+        ],
+        "url": "http://localhost:8001/api/applications/ВСТАВЬ_ID_СЮДА/"
+      }
+    },
+    {
+      "name": "8. GET список субсидий",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer ВСТАВЬ_ТОКЕН_СЮДА" }
+        ],
+        "url": "http://localhost:8001/api/subsidies/"
+      }
+    }
+  ]
+}

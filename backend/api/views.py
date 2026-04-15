@@ -19,7 +19,6 @@ from .serializers import (
 
 HARDCODED_USERS = {
     'admin': {'password': 'admin', 'role': 'admin'},
-    'user':  {'password': 'user',  'role': 'user'},
 }
 
 
@@ -144,10 +143,7 @@ class ApplicationListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        if request.user.role == 'admin':
-            tasks = SubsidyTask.objects.all().order_by('-created_at')
-        else:
-            tasks = SubsidyTask.objects.filter(farmer_id=request.user.username).order_by('-created_at')
+        tasks = SubsidyTask.objects.all().order_by('-created_at')
         search = request.query_params.get('search', '').strip()
         if search:
             tasks = tasks.filter(region_code__icontains=search)
@@ -206,8 +202,6 @@ class BudgetListView(APIView):
         return Response(RegionBudgetSerializer(budgets, many=True).data)
 
     def patch(self, request, pk=None):
-        if request.user.role != 'admin':
-            return Response({'error': 'Нет доступа'}, status=status.HTTP_403_FORBIDDEN)
         try:
             budget = RegionBudget.objects.get(pk=pk)
         except RegionBudget.DoesNotExist:

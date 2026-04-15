@@ -34,7 +34,7 @@ export class AuthService {
   }
 
   getRole(): string {
-    return localStorage.getItem('role') || 'user';
+    return localStorage.getItem('role') || 'admin';
   }
 
   isLoggedIn(): boolean {
