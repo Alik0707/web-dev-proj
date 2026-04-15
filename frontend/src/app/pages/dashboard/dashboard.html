@@ -44,7 +44,7 @@
           <tbody>
             @for (app of applications; track app.id) {
               <tr>
-                <td>{{ app.application_number || app.id.slice(0,8) }}</td>
+                <td>{{ app.id }}</td>
                 <td>{{ app.region_code }}</td>
                 <td>{{ app.meta?.direction || app.crop_type }}</td>
                 <td>{{ app.amount_requested | number }}</td>
